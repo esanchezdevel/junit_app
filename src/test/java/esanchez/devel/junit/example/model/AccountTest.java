@@ -51,5 +51,33 @@ class AccountTest {
 		 * that the result that we are getting in the code
 		 */
 		assertEquals(resultExpected, resultReal);
-	}	
+	}
+	
+	@Test
+	@DisplayName("test_account_balance")
+	void testAccountBalance() {
+		Account account = new Account("Tom", new BigDecimal("1000.12344"));
+		
+		assertEquals(1000.12344, account.getBalance().doubleValue());
+		/*
+		 * assertFalse for check that one evaluation is false
+		 * compareTo returns: -1 if <, 0 if ==, 1 if >  
+		 */
+		assertFalse(account.getBalance().compareTo(BigDecimal.ZERO) < 0);
+		assertTrue(account.getBalance().compareTo(BigDecimal.ZERO) > 0);
+
+	}
+	
+	@Test
+	void testAccountReference() {
+		
+		Account account = new Account("John", new BigDecimal("12.0934"));
+		Account account2 = new Account("Joh", new BigDecimal("12.0934"));
+	
+		/*
+		 * assertNotEquals for check that 2 objects are not equals
+		 */
+		assertNotEquals(account2, account);
+		//assertEquals(account2, account);
+	}
 }
