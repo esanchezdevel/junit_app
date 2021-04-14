@@ -1,0 +1,18 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>esanchez.devel</groupId>
+	<artifactId>junit_app</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+	<name>junit_app</name>
+	<description>project with junit5 examples</description>
+	<dependencies>
+		<!-- JUnit Jupiter is the junit module that we will use for make our tests -->
+		<dependency>
+			<groupId>org.junit.jupiter</groupId>
+			<artifactId>junit-jupiter</artifactId>
+			<version>5.7.1</version>
+		</dependency>
+	</dependencies>
+</project>
