@@ -11,6 +11,8 @@ import java.math.BigDecimal;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import esanchez.devel.junit.example.exception.InsufficientBalanceException;
+
 class AccountTest {
 
 	/*
@@ -108,5 +110,31 @@ class AccountTest {
 		account.credit(new BigDecimal("2"));
 		assertNotNull(account.getBalance());
 		assertEquals(new BigDecimal("14.23456"), account.getBalance());
+	}
+	
+	/*
+	 * Test an exception with assertThrows
+	 */
+	@Test
+	@DisplayName("test_insufficient_balance_exception")
+	void testInsufficientBalanceException() {
+		Account account = new Account("Tom", new BigDecimal("12.23456"));
+		
+		/*
+		 * first test that the exception is thrower.
+		 * the code that should throw the exception must be in a lambda expression
+		 */
+		Exception exception = assertThrows(InsufficientBalanceException.class, ()->{
+			account.debit(new BigDecimal("14"));
+		});
+		
+		/*
+		 * now we can test that the message printed by the exception is
+		 * the message that we expected
+		 */
+		String message = exception.getMessage();
+		String expected = "insufficient balance";
+		
+		assertEquals(expected, message);
 	}
 }

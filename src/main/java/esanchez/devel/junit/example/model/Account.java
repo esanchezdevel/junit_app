@@ -2,6 +2,8 @@ package esanchez.devel.junit.example.model;
 
 import java.math.BigDecimal;
 
+import esanchez.devel.junit.example.exception.InsufficientBalanceException;
+
 public class Account {
 
 	private String name;
@@ -30,8 +32,13 @@ public class Account {
 		this.balance = balance;
 	}
 
-	public void debit(BigDecimal amount) {
-		this.balance = this.balance.subtract(amount);
+	public void debit(BigDecimal amount) throws InsufficientBalanceException {
+		
+		if (amount.compareTo(this.balance) == -1) {
+			this.balance = this.balance.subtract(amount);
+		} else {
+			throw new InsufficientBalanceException("insufficient balance");
+		}
 	}
 	
 	public void credit(BigDecimal amount) {
