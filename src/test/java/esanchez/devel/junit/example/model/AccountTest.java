@@ -80,4 +80,33 @@ class AccountTest {
 		assertNotEquals(account2, account);
 		//assertEquals(account2, account);
 	}
+	
+	/*
+	 * Tests done with TDD
+	 * 1- create the empty methods "debit()" and "credit()" in Account.java without any funcionality
+	 * 2- create the tests "test_debit_account" and "test_credit_account"
+	 * 3- execute the tests, and fails because the methods was not implemented yet
+	 * 4- implement the methods debit and credit in Account.java for make the tests works
+	 * 5- execute the tests, and now are working :)
+	 */
+	@Test
+	@DisplayName("test_debit_account")
+	void testDebitAccount() {
+		Account account = new Account("Tom", new BigDecimal("12.23456"));
+		account.debit(new BigDecimal("2"));
+		/*
+		 * assertNotNull for check that an object is not null
+		 */
+		assertNotNull(account.getBalance());
+		assertEquals(new BigDecimal("10.23456"), account.getBalance());
+	}
+	
+	@Test
+	@DisplayName("test_credit_account")
+	void testCreditAccount() {
+		Account account = new Account("Tom", new BigDecimal("12.23456"));
+		account.credit(new BigDecimal("2"));
+		assertNotNull(account.getBalance());
+		assertEquals(new BigDecimal("14.23456"), account.getBalance());
+	}
 }
