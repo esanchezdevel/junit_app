@@ -44,11 +44,17 @@ public class BankTest {
 		 * lambda expression we must include one assert
 		 */
 		assertAll(
-				() -> {assertEquals(new BigDecimal("1100"), account2.getBalance());}, 
-				() -> {assertEquals(new BigDecimal("1400"), account1.getBalance());}, 
-				() -> {assertEquals(2, bank.getAccounts().size());}, 
-				() -> {assertEquals("BBVA", account1.getBank().getName());}, 
-				() -> {assertEquals("BBVA", account2.getBank().getName());}, 
+				() -> {
+					/*
+					 * We can add an extra parameter with a lambda expression and a string that will be a custom
+					 * error message to show when the assert fails.
+					 */
+					assertEquals(new BigDecimal("1100"), account2.getBalance(), () -> "account2 wrong balance");
+					}, 
+				() -> {assertEquals(new BigDecimal("1400"), account1.getBalance(), () -> "account1 wrong balance");}, 
+				() -> {assertEquals(2, bank.getAccounts().size(), () -> "the size of the list is wrong");}, 
+				() -> {assertEquals("BBVA", account1.getBank().getName(), () -> "the account1 name is not the expected");}, 
+				() -> {assertEquals("BBVA", account2.getBank().getName(), () -> "the account2 name is not the expected");}, 
 				() -> {
 					/*
 					 * test that bank have one account with name=Tom.
