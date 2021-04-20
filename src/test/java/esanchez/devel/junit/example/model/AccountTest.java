@@ -7,14 +7,23 @@ package esanchez.devel.junit.example.model;
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.math.BigDecimal;
+import java.util.Properties;
 
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.api.condition.DisabledOnOs;
+import org.junit.jupiter.api.condition.EnabledIfSystemProperties;
+import org.junit.jupiter.api.condition.EnabledIfSystemProperty;
+import org.junit.jupiter.api.condition.EnabledOnJre;
+import org.junit.jupiter.api.condition.EnabledOnOs;
+import org.junit.jupiter.api.condition.JRE;
+import org.junit.jupiter.api.condition.OS;
 
 import esanchez.devel.junit.example.exception.InsufficientBalanceException;
 
@@ -161,5 +170,95 @@ class AccountTest {
 		String expected = "insufficient balance";
 		
 		assertEquals(expected, message);
+	}
+	
+	/*
+	 * The @EnabledOn... tags help us to execute tests only in some
+	 * scenarios. For example if we only want to execute one test
+	 * when we are in a windows pc. 
+	 */
+	@Test
+	@DisplayName("test_only_windows")
+	@EnabledOnOs(OS.WINDOWS)
+	void testOnlyWindow() {
+		
+	}
+	
+	@Test
+	@DisplayName("test_only_linux_and_mac")
+	@EnabledOnOs({OS.LINUX, OS.MAC})
+	void testOnlyLinuxMac() {
+		
+	}
+	
+	/*
+	 * with @DisabledOn... tag we have the same functionality of
+	 * @EnabledOn but in the oposite. 
+	 */
+	@Test
+	@DisplayName("test_no_windows")
+	@DisabledOnOs(OS.WINDOWS)
+	void testNoWindow() {
+		
+	}
+	
+	@Test
+	@DisplayName("test_no_linux_and_mac")
+	@DisabledOnOs({OS.LINUX, OS.MAC})
+	void testNoLinuxMax() {
+		
+	}
+	
+	@Test
+	@DisplayName("test_on_java8")
+	@EnabledOnJre(JRE.JAVA_8)
+	void testOnJava8() {
+		
+	}
+	
+	@Test
+	@DisplayName("test_on_java11")
+	@EnabledOnJre(JRE.JAVA_11)
+	void testOnJava11() {
+		
+	}
+	
+	/*
+	 * method for print the available system properties for use in
+	 * the next test
+	 */
+	
+	@Test
+	@DisplayName("test_print_properties")
+	@Disabled
+	void testPrintProperties() {
+		
+		Properties properties = System.getProperties();
+		properties.forEach((k, v) -> System.out.println("k: " + k + " v:" + v));
+	}
+	
+	/*
+	 * @EnabledIfSystemProperty execute a test if a system property is equals to the
+	 * one that we pass in the annotation.
+	 * In "matches" we can put a regular expression
+	 * Like in the previous examples, we can use @DisabledIfSystemProperty 
+	 * for have the oposite logic
+	 */
+	@Test
+	@DisplayName("test_java_version")
+	@EnabledIfSystemProperty(named = "java.version", matches="1.8.0_144")
+	void testJavaVersion() {
+		
+	}
+	
+	/*
+	 * test if we pass the environment variable ENV=dev in the
+	 * run configuration/arguments -ea -DENV=dev
+	 */
+	@Test
+	@DisplayName("test_dev")
+	@EnabledIfSystemProperty(named = "ENV", matches="dev")
+	void testDev() {
+		
 	}
 }
