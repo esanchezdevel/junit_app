@@ -8,6 +8,8 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import java.math.BigDecimal;
 
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -15,17 +17,29 @@ import esanchez.devel.junit.example.exception.InsufficientBalanceException;
 
 class AccountTest {
 
+	Account account;
+	
+	@BeforeEach
+	void initMethodTest() {
+		System.out.println("Initializing method");
+		
+		this.account = new Account("Tom", new BigDecimal("1000.12344"));
+	}
+	
+	@AfterEach
+	void finishMethodTest() {
+		System.out.println("finalizing method");
+	}
+	
 	/*
 	 * Simple test case with use of the 
 	 * assertEquals method
 	 */
 	@Test
 	@DisplayName("test_account_name_constructor") //the test name showed in the display
-	void testAccountNameConstructor() {
-		Account account = new Account("Tom", new BigDecimal("1000.12344"));
-		
+	void testAccountNameConstructor() {		
 		String resultExpected = "Tom";
-		String resultReal = account.getName();
+		String resultReal = this.account.getName();
 		
 		/*
 		 * assertEquals for check that the expected result is the same
@@ -57,10 +71,8 @@ class AccountTest {
 	
 	@Test
 	@DisplayName("test_account_balance")
-	void testAccountBalance() {
-		Account account = new Account("Tom", new BigDecimal("1000.12344"));
-		
-		assertEquals(1000.12344, account.getBalance().doubleValue());
+	void testAccountBalance() {		
+		assertEquals(1000.12344, this.account.getBalance().doubleValue());
 		/*
 		 * assertFalse for check that one evaluation is false
 		 * compareTo returns: -1 if <, 0 if ==, 1 if >  
