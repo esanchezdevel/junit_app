@@ -5,6 +5,7 @@ package esanchez.devel.junit.example.model;
  * without writing the Assertions class every time
  */
 import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assumptions.*;
 
 import java.math.BigDecimal;
 import java.util.Map;
@@ -288,5 +289,46 @@ class AccountTest {
 	@EnabledIfEnvironmentVariable(named = "ENVIRONMENT", matches="dev")
 	void testEnv() {
 		
+	}
+	
+	@Test
+	@DisplayName("test_account_balance_dev")
+	void testAccountBalanceDev() {
+		boolean isDev = "dev".equals(System.getProperty(("ENV")));
+		/*
+		 * with "assumeTrue" if isDev is false, then the rest of the test will no execute
+		 * but without error.
+		 */
+		assumeTrue(isDev);
+		
+		assertEquals(1000.12344, this.account.getBalance().doubleValue());
+		/*
+		 * assertFalse for check that one evaluation is false
+		 * compareTo returns: -1 if <, 0 if ==, 1 if >  
+		 */
+		assertFalse(account.getBalance().compareTo(BigDecimal.ZERO) < 0);
+		assertTrue(account.getBalance().compareTo(BigDecimal.ZERO) > 0);
+	}
+	
+	
+	@Test
+	@DisplayName("test_account_balance_dev2")
+	void testAccountBalanceDev2() {
+		boolean isDev = "dev".equals(System.getProperty(("ENV")));
+		/*
+		 * with "assumingThat" if isDev is false, we can enclose in a lambda expression
+		 * the code that we want to execute if it's true. And if not then that code will not execute
+		 * but the test will be passed without errors. 
+		 * And we can have more assumingThat with more asserts inside independent each other
+		 */
+		assumingThat(isDev, () -> {
+			assertEquals(1000.12344, this.account.getBalance().doubleValue());
+			/*
+			 * assertFalse for check that one evaluation is false
+			 * compareTo returns: -1 if <, 0 if ==, 1 if >  
+			 */
+			assertFalse(account.getBalance().compareTo(BigDecimal.ZERO) < 0);
+			assertTrue(account.getBalance().compareTo(BigDecimal.ZERO) > 0);
+		});
 	}
 }
