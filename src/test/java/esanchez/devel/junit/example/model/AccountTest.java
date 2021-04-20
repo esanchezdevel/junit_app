@@ -8,16 +8,29 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import java.math.BigDecimal;
 
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
 
 import esanchez.devel.junit.example.exception.InsufficientBalanceException;
 
 class AccountTest {
 
 	Account account;
+	
+	@BeforeAll
+	static void setUp() {
+		System.out.println("Initializing class");
+	}
+	
+	@AfterAll
+	static void afterAll() {
+		System.out.println("Finalizing class");
+	}
 	
 	@BeforeEach
 	void initMethodTest() {
