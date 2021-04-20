@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import java.math.BigDecimal;
 
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -11,6 +12,7 @@ public class BankTest {
 
 	@Test
 	@DisplayName("test_transfer_money_accounts")
+	@Disabled
 	void testTransferMoneyAccounts() {
 		
 		Account account1 = new Account("John", new BigDecimal("1000"));
