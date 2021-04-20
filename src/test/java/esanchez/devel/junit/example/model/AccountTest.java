@@ -7,6 +7,7 @@ package esanchez.devel.junit.example.model;
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.math.BigDecimal;
+import java.util.Map;
 import java.util.Properties;
 
 import org.junit.jupiter.api.AfterAll;
@@ -18,6 +19,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.condition.DisabledOnOs;
+import org.junit.jupiter.api.condition.EnabledIfEnvironmentVariable;
 import org.junit.jupiter.api.condition.EnabledIfSystemProperties;
 import org.junit.jupiter.api.condition.EnabledIfSystemProperty;
 import org.junit.jupiter.api.condition.EnabledOnJre;
@@ -259,6 +261,32 @@ class AccountTest {
 	@DisplayName("test_dev")
 	@EnabledIfSystemProperty(named = "ENV", matches="dev")
 	void testDev() {
+		
+	}
+	
+	@Test
+	@Disabled
+	@DisplayName("test_get_env_variables")
+	void testPrintEnvironmentVariables() {
+		Map<String, String> variables = System.getenv();
+		variables.entrySet().stream().forEach(e -> System.out.println("k: " + e.getKey() + " v: " + e.getValue()));
+	}
+	
+	@Test
+	@DisplayName("test_session_desktop")
+	@EnabledIfEnvironmentVariable(named="XDG_SESSION_DESKTOP", matches="ubuntu")
+	void testSessionDesktop() {
+		
+	}
+	
+	/*
+	 * test if we pass the environment variable ENVIRONMENT=dev in the
+	 * run configuration/environment
+	 */
+	@Test
+	@DisplayName("test_env")
+	@EnabledIfEnvironmentVariable(named = "ENVIRONMENT", matches="dev")
+	void testEnv() {
 		
 	}
 }
