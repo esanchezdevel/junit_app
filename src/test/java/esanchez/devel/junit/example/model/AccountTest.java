@@ -18,6 +18,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.api.RepeatedTest;
+import org.junit.jupiter.api.RepetitionInfo;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.condition.DisabledOnOs;
@@ -340,5 +342,30 @@ class AccountTest {
 			assertFalse(account.getBalance().compareTo(BigDecimal.ZERO) < 0);
 			assertTrue(account.getBalance().compareTo(BigDecimal.ZERO) > 0);
 		});
+	}
+	
+	/*
+	 * @RepeatedTest is an annotation for execute the test n times.
+	 * RepetitionInfo parameter is optional for get info about the current repetition
+	 */
+	@RepeatedTest(value=5, name="Repeat number {currentRepetition} of {totalRepetitions}")
+	@DisplayName("test_account_name_constructor2") //the test name showed in the display
+	void testAccountNameConstructor2(RepetitionInfo info) {
+		
+		if (info.getCurrentRepetition() > 3)
+			System.out.println("executing repetition > 3");
+		String resultExpected = "Tom";
+		String resultReal = this.account.getName();
+		
+		/*
+		 * assertEquals for check that the expected result is the same
+		 * that the result that we are getting in the code
+		 */
+		assertEquals(resultExpected, resultReal);
+		
+		/*
+		 * assertTrue for check that one evaluation is true
+		 */
+		assertTrue(resultReal.equals("Tom"));
 	}
 }
