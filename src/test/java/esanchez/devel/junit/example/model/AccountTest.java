@@ -17,6 +17,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.condition.DisabledOnOs;
@@ -176,42 +177,51 @@ class AccountTest {
 	}
 	
 	/*
-	 * The @EnabledOn... tags help us to execute tests only in some
-	 * scenarios. For example if we only want to execute one test
-	 * when we are in a windows pc. 
+	 * @Nested is an annotation used for have a class inside the main class
+	 * for have the tests more organized
 	 */
-	@Test
-	@DisplayName("test_only_windows")
-	@EnabledOnOs(OS.WINDOWS)
-	void testOnlyWindow() {
+	@Nested
+	@DisplayName("test_operative_systems")
+	class OperativeSystemsTest {
+		/*
+		 * The @EnabledOn... tags help us to execute tests only in some
+		 * scenarios. For example if we only want to execute one test
+		 * when we are in a windows pc. 
+		 */
+		@Test
+		@DisplayName("test_only_windows")
+		@EnabledOnOs(OS.WINDOWS)
+		void testOnlyWindow() {
+			
+		}
+		
+		@Test
+		@DisplayName("test_only_linux_and_mac")
+		@EnabledOnOs({OS.LINUX, OS.MAC})
+		void testOnlyLinuxMac() {
+			
+		}
+		
+		/*
+		 * with @DisabledOn... tag we have the same functionality of
+		 * @EnabledOn but in the oposite. 
+		 */
+		@Test
+		@DisplayName("test_no_windows")
+		@DisabledOnOs(OS.WINDOWS)
+		void testNoWindow() {
+			
+		}
+		
+		@Test
+		@DisplayName("test_no_linux_and_mac")
+		@DisabledOnOs({OS.LINUX, OS.MAC})
+		void testNoLinuxMax() {
+			
+		}
 		
 	}
-	
-	@Test
-	@DisplayName("test_only_linux_and_mac")
-	@EnabledOnOs({OS.LINUX, OS.MAC})
-	void testOnlyLinuxMac() {
-		
-	}
-	
-	/*
-	 * with @DisabledOn... tag we have the same functionality of
-	 * @EnabledOn but in the oposite. 
-	 */
-	@Test
-	@DisplayName("test_no_windows")
-	@DisabledOnOs(OS.WINDOWS)
-	void testNoWindow() {
-		
-	}
-	
-	@Test
-	@DisplayName("test_no_linux_and_mac")
-	@DisabledOnOs({OS.LINUX, OS.MAC})
-	void testNoLinuxMax() {
-		
-	}
-	
+
 	@Test
 	@DisplayName("test_on_java8")
 	@EnabledOnJre(JRE.JAVA_8)
