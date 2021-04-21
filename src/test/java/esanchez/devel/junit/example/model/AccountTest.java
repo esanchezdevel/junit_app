@@ -8,6 +8,8 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assumptions.*;
 
 import java.math.BigDecimal;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
@@ -30,6 +32,10 @@ import org.junit.jupiter.api.condition.EnabledOnJre;
 import org.junit.jupiter.api.condition.EnabledOnOs;
 import org.junit.jupiter.api.condition.JRE;
 import org.junit.jupiter.api.condition.OS;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
+import org.junit.jupiter.params.provider.MethodSource;
+import org.junit.jupiter.params.provider.ValueSource;
 
 import esanchez.devel.junit.example.exception.InsufficientBalanceException;
 
@@ -367,5 +373,65 @@ class AccountTest {
 		 * assertTrue for check that one evaluation is true
 		 */
 		assertTrue(resultReal.equals("Tom"));
+	}
+	
+	
+	@Nested
+	class ParameterizedTests {
+		/*
+		 * @ParameterizedTest indicates that the test will be repetead
+		 * @ValueSource is where we set all the values that will change in each test
+		 * and also is the number of times that the test will be repeated
+		 * -Its necessary to pass the parameter in the method with the same type 
+		 * of the valueSource data. in this case String.
+		 */
+		@ParameterizedTest(name="repetition number {index} executing with value {0}") //{0} print the value of the valueSource
+		@ValueSource(strings = {"100", "200", "300", "500", "700", "1000"})
+		@DisplayName("test_parameterized_valueSource")
+		void testParameterizedValueSource(String amount) {
+			account.debit(new BigDecimal(amount));
+			/*
+			 * assertNotNull for check that an object is not null
+			 */
+			assertNotNull(account.getBalance());
+			assertTrue(account.getBalance().compareTo(BigDecimal.ZERO) > 0);
+		}
+		
+		/*
+		 * csvSource is a different way to make a parameterizedTests, using an index and a value
+		 */
+		@ParameterizedTest(name="repetition number {index} executing with value {0}") //{0} print the value of the valueSource
+		@CsvSource({"1,100", "2,200", "3,300", "4,500", "5,700", "6,1000"})
+		@DisplayName("test_parameterized_csvSource")
+		void testParameterizedCsvSource(String index, String amount) {
+			
+			System.out.println(index + " -> " + amount);
+			account.debit(new BigDecimal(amount));
+			/*
+			 * assertNotNull for check that an object is not null
+			 */
+			assertNotNull(account.getBalance());
+			assertTrue(account.getBalance().compareTo(BigDecimal.ZERO) > 0);
+		}
+	}
+	
+	/*
+	 * MethodSource is a different way to make a parameterizedTests, using a method that returns the list
+	 * with our values
+	 */
+	@ParameterizedTest(name="repetition number {index} executing with value {0}") //{0} print the value of the valueSource
+	@MethodSource("amounts")
+	@DisplayName("test_parameterized_methodSource")
+	void testParameterizedMethodSource(String amount) {
+		account.debit(new BigDecimal(amount));
+		/*
+		 * assertNotNull for check that an object is not null
+		 */
+		assertNotNull(account.getBalance());
+		assertTrue(account.getBalance().compareTo(BigDecimal.ZERO) > 0);
+	}
+	
+	static List<String> amounts() {
+		return Arrays.asList("100", "200", "300", "500", "700", "1000");
 	}
 }
