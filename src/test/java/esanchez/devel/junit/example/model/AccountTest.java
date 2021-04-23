@@ -24,7 +24,9 @@ import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.api.RepetitionInfo;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInfo;
 import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.api.TestReporter;
 import org.junit.jupiter.api.condition.DisabledOnOs;
 import org.junit.jupiter.api.condition.EnabledIfEnvironmentVariable;
 import org.junit.jupiter.api.condition.EnabledIfSystemProperties;
@@ -55,10 +57,13 @@ class AccountTest {
 	}
 	
 	@BeforeEach
-	void initMethodTest() {
+	void initMethodTest(TestInfo testInfo, TestReporter testReporter) {
 		System.out.println("Initializing method");
 		
 		this.account = new Account("Tom", new BigDecimal("1000.12344"));
+		
+		System.out.println("Test info: " + testInfo.getDisplayName() + " - " + testInfo.getTestMethod().get().getName() + 
+				" etiquetas: " + testInfo.getTags());
 	}
 	
 	@AfterEach
@@ -107,6 +112,21 @@ class AccountTest {
 	@Test
 	@DisplayName("test_account_balance")
 	void testAccountBalance() {		
+		assertEquals(1000.12344, this.account.getBalance().doubleValue());
+		/*
+		 * assertFalse for check that one evaluation is false
+		 * compareTo returns: -1 if <, 0 if ==, 1 if >  
+		 */
+		assertFalse(account.getBalance().compareTo(BigDecimal.ZERO) < 0);
+		assertTrue(account.getBalance().compareTo(BigDecimal.ZERO) > 0);
+
+	}
+	
+	@Test
+	@Tag("account")
+	@DisplayName("test_account_balance_extra")
+	void testAccountBalanceExtra() {
+		
 		assertEquals(1000.12344, this.account.getBalance().doubleValue());
 		/*
 		 * assertFalse for check that one evaluation is false
