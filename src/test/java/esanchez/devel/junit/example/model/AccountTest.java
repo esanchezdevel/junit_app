@@ -22,6 +22,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.api.RepetitionInfo;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.condition.DisabledOnOs;
@@ -188,6 +189,7 @@ class AccountTest {
 	 * @Nested is an annotation used for have a class inside the main class
 	 * for have the tests more organized
 	 */
+	@Tag("operativeSystem")
 	@Nested
 	@DisplayName("test_operative_systems")
 	class OperativeSystemsTest {
@@ -375,7 +377,11 @@ class AccountTest {
 		assertTrue(resultReal.equals("Tom"));
 	}
 	
-	
+	/*
+	 * @Tag annotation is used for execute only the tests that we want. 
+	 * We need to configure the tag to execute in the IDE Run Configuration.
+	 */
+	@Tag("param")
 	@Nested
 	class ParameterizedTests {
 		/*
@@ -419,6 +425,7 @@ class AccountTest {
 	 * MethodSource is a different way to make a parameterizedTests, using a method that returns the list
 	 * with our values
 	 */
+	@Tag("param")
 	@ParameterizedTest(name="repetition number {index} executing with value {0}") //{0} print the value of the valueSource
 	@MethodSource("amounts")
 	@DisplayName("test_parameterized_methodSource")
