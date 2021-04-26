@@ -1,0 +1,8 @@
+package esanchez.devel.junit.example.service;
+
+import esanchez.devel.junit.example.model.Exam;
+
+public interface ExamService {
+
+	Exam findExamByName(String name);
+}
