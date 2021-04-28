@@ -6,37 +6,45 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.*;
 
-import java.util.Arrays;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import esanchez.devel.junit.example.model.Exam;
 import esanchez.devel.junit.example.repository.ExamRepository;
 import esanchez.devel.junit.example.repository.QuestionsRepository;
 
+/*
+ * Extension needed for be able to use mockito with dependency injection
+ */
+@ExtendWith(MockitoExtension.class)
 public class ExamServiceImplTest {
 
 	/*
 	 * the class that we will mock
 	 */
-	private static ExamRepository repository;
-	private static QuestionsRepository questionsRepository;
+	@Mock
+	private ExamRepository repository;
+	@Mock
+	private QuestionsRepository questionsRepository;
 	
-	private ExamService service;
+	@InjectMocks
+	private ExamServiceImpl service;
 	
 	@BeforeEach
 	void setUpMethod() {
 		/*
-		 * create a mock instance of ExamRepository
+		 * This line is for allow the dependency injection with mocks annotations
+		 * It makes the same of the @ExtendWith(MockitoExtension.class) that is 
+		 * why is commented
 		 */
-		repository = mock(ExamRepository.class);
-		questionsRepository = mock(QuestionsRepository.class);
-		service = new ExamServiceImpl(repository, questionsRepository);
+		//MockitoAnnotations.openMocks(this);
 	}
 	
 	@Test
@@ -78,5 +86,22 @@ public class ExamServiceImplTest {
 		assertNotNull(exam);
 		assertEquals(5, exam.getQuestions().size());
 		assertTrue(exam.getQuestions().contains("arithmetics"));
+	}
+	
+	/*
+	 * verify is used for check that a method was invoked
+	 */
+	@Test
+	void testExamQuestionsVerify() {
+		when(repository.findAll()).thenReturn(Data.DATA);
+		when(questionsRepository.findQuestionsByExamId(anyLong())).thenReturn(Data.QUESTIONS);
+		
+		Exam exam = service.findExamWithQuestions("History");
+		
+		assertNotNull(exam);
+		assertEquals(5, exam.getQuestions().size());
+		assertTrue(exam.getQuestions().contains("arithmetics"));
+		verify(repository).findAll();
+		verify(questionsRepository).findQuestionsByExamId(anyLong());
 	}
 }
