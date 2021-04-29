@@ -12,4 +12,10 @@ public class ExamRepositoryImpl implements ExamRepository {
 		return Arrays.asList(new Exam(5L, "Maths"), new Exam(6L, "History"), new Exam(7L, "Language"));
 	}
 
+	@Override
+	public Exam saveExam(Exam exam) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

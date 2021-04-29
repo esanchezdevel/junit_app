@@ -14,7 +14,9 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.invocation.InvocationOnMock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.stubbing.Answer;
 
 import esanchez.devel.junit.example.model.Exam;
 import esanchez.devel.junit.example.repository.ExamRepository;
@@ -103,5 +105,37 @@ public class ExamServiceImplTest {
 		assertTrue(exam.getQuestions().contains("arithmetics"));
 		verify(repository).findAll();
 		verify(questionsRepository).findQuestionsByExamId(anyLong());
+	}
+	
+	@Test
+	void testSaveExam() {
+		
+		Exam newExam = Data.EXAM;
+		newExam.setQuestions(Data.QUESTIONS);
+		
+		/*
+		 * with .then and adding new Answer with an anonymous function we can increment the id 
+		 * programmatically in order to have a more realistic test 
+		 */
+		when(repository.saveExam(any(Exam.class))).then(new Answer<Exam>() {
+			
+			Long sequence = 8L;
+			
+			@Override
+			public Exam answer(InvocationOnMock invocation) throws Throwable {
+				
+				Exam exam = invocation.getArgument(0);
+				exam.setId(sequence++);
+				return exam;
+			}
+			
+		});
+		Exam exam = service.save(newExam);
+		
+		assertNotNull(exam.getId());
+		assertEquals(8L, exam.getId());
+		assertEquals("History", exam.getName());
+		verify(repository).saveExam(any(Exam.class));
+		verify(questionsRepository).saveQuestions(anyList());
 	}
 }

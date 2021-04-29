@@ -17,4 +17,6 @@ public class Data {
 			"derived", 
 			"trigonometry", 
 			"geometry");
+	
+	public static final Exam EXAM = new Exam(null, "History");
 }
