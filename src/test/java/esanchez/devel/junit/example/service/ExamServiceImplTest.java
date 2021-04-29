@@ -159,4 +159,24 @@ public class ExamServiceImplTest {
 		});
 		verify(questionsRepository).findQuestionsByExamId(isNull());
 	}
+	
+	@Test
+	void testArgumentMatchers() {
+		when(repository.findAll()).thenReturn(Data.DATA);
+		when(questionsRepository.findQuestionsByExamId(anyLong())).thenReturn(Data.QUESTIONS);
+
+		service.findExamWithQuestions("Maths");
+		
+		verify(repository).findAll();
+		/*
+		 * With argThat we can check with a lambda expression that an argument passed to the method
+		 * that we are verifying is the expected one
+		 */
+		verify(questionsRepository).findQuestionsByExamId(argThat(arg -> arg != null && arg.equals(5L)));
+		/*
+		 * A different way to test that the value is equals to the one expected
+		 */
+		verify(questionsRepository).findQuestionsByExamId(eq(5L));
+		verify(questionsRepository).findQuestionsByExamId(argThat(arg -> arg != null && arg >= 5L));
+	}
 }
