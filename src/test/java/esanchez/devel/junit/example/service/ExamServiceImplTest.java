@@ -3,6 +3,7 @@ package esanchez.devel.junit.example.service;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.*;
 
@@ -137,5 +138,25 @@ public class ExamServiceImplTest {
 		assertEquals("History", exam.getName());
 		verify(repository).saveExam(any(Exam.class));
 		verify(questionsRepository).saveQuestions(anyList());
+	}
+	
+	@Test
+	void testExceptionsManagement() {
+		when(repository.findAll()).thenReturn(Data.DATA);
+		when(questionsRepository.findQuestionsByExamId(anyLong())).thenThrow(IllegalArgumentException.class);
+		assertThrows(IllegalArgumentException.class, () -> {
+			service.findExamWithQuestions("Maths");
+		});
+		verify(questionsRepository).findQuestionsByExamId(anyLong());
+	}
+	
+	@Test
+	void testExceptionsManagementWithNulls() {
+		when(repository.findAll()).thenReturn(Data.EXAMS_ID_NULL);
+		when(questionsRepository.findQuestionsByExamId(isNull())).thenThrow(IllegalArgumentException.class);
+		assertThrows(IllegalArgumentException.class, () -> {
+			service.findExamWithQuestions("Maths");
+		});
+		verify(questionsRepository).findQuestionsByExamId(isNull());
 	}
 }
