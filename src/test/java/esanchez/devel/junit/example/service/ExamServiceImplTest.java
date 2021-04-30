@@ -11,8 +11,10 @@ import java.util.Collections;
 import java.util.List;
 
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentMatcher;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.invocation.InvocationOnMock;
@@ -178,5 +180,50 @@ public class ExamServiceImplTest {
 		 */
 		verify(questionsRepository).findQuestionsByExamId(eq(5L));
 		verify(questionsRepository).findQuestionsByExamId(argThat(arg -> arg != null && arg >= 5L));
+	}
+	
+	
+	@Test
+	void testMyArgumentMatchers() {
+		when(repository.findAll()).thenReturn(Data.DATA_WITH_NEGATIVES);
+		when(questionsRepository.findQuestionsByExamId(anyLong())).thenReturn(Data.QUESTIONS);
+
+		service.findExamWithQuestions("Maths");
+		
+		verify(repository).findAll();
+		/*
+		 * With argThat we can check with a lambda expression that an argument passed to the method
+		 * that we are verifying is the expected one
+		 */
+		verify(questionsRepository).findQuestionsByExamId(argThat(arg -> arg != null && arg.equals(-5L)));
+		/*
+		 * A different way to test that the value is equals to the one expected
+		 */
+		verify(questionsRepository).findQuestionsByExamId(eq(-5L));
+		
+		/*
+		 * test our custom Argument Matcher. Will fail because we are passing a negative argument
+		 */
+		verify(questionsRepository).findQuestionsByExamId(argThat(new MyArgsMatchers()));
+	}
+	
+	
+	/*
+	 * Our own argument matcher
+	 */
+	public static class MyArgsMatchers implements ArgumentMatcher<Long> {
+
+		private Long argument;
+		
+		@Override
+		public boolean matches(Long argument) {
+			this.argument = argument;
+			return argument != null && argument > 0;
+		}
+
+		@Override
+		public String toString() {
+			return "Is a custom error message when the test fails. " + this.argument + " must be a positive integer number";
+		}
 	}
 }

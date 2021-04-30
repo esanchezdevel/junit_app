@@ -11,6 +11,11 @@ public class Data {
 			new Exam(6L, "History"), 
 			new Exam(7L, "Language"));
 	
+	public static final List<Exam> DATA_WITH_NEGATIVES = Arrays.asList(
+			new Exam(-5L, "Maths"), 
+			new Exam(-6L, "History"), 
+			new Exam(-7L, "Language"));
+	
 	public static final List<Exam> EXAMS_ID_NULL = Arrays.asList(
 			new Exam(null, "Maths"), 
 			new Exam(null, "History"), 
