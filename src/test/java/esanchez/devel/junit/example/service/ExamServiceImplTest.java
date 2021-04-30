@@ -14,7 +14,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
 import org.mockito.ArgumentMatcher;
+import org.mockito.Captor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.invocation.InvocationOnMock;
@@ -41,6 +43,12 @@ public class ExamServiceImplTest {
 	
 	@InjectMocks
 	private ExamServiceImpl service;
+	
+	/*
+	 * Define the ArgumentCaptor with the annotation
+	 */
+	@Captor
+	ArgumentCaptor<Long> captor;
 	
 	@BeforeEach
 	void setUpMethod() {
@@ -225,5 +233,45 @@ public class ExamServiceImplTest {
 		public String toString() {
 			return "Is a custom error message when the test fails. " + this.argument + " must be a positive integer number";
 		}
+	}
+	
+	
+	@Test
+	void testArgumentCaptor() {
+		when(repository.findAll()).thenReturn(Data.DATA);
+		when(questionsRepository.findQuestionsByExamId(anyLong())).thenReturn(Data.QUESTIONS);
+
+		service.findExamWithQuestions("Maths");
+		
+		/*
+		 * The argumentCaptor capture the argument passed in the mocked method
+		 */
+		ArgumentCaptor<Long> captor = ArgumentCaptor.forClass(Long.class);
+		verify(questionsRepository).findQuestionsByExamId(captor.capture());
+		
+		/*
+		 * assert that the value captured is the expected one
+		 */
+		assertEquals(5L, captor.getValue());
+	}
+	
+	
+	@Test
+	void testArgumentCaptor2() {
+		when(repository.findAll()).thenReturn(Data.DATA);
+		when(questionsRepository.findQuestionsByExamId(anyLong())).thenReturn(Data.QUESTIONS);
+
+		service.findExamWithQuestions("Maths");
+		
+		/*
+		 * The argumentCaptor capture the argument passed in the mocked method
+		 * this time the captor is defined with an annotation at the beginnig of the class
+		 */
+		verify(questionsRepository).findQuestionsByExamId(captor.capture());
+		
+		/*
+		 * assert that the value captured is the expected one
+		 */
+		assertEquals(5L, captor.getValue());
 	}
 }
