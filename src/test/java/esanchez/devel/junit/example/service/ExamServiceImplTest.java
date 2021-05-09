@@ -25,7 +25,9 @@ import org.mockito.stubbing.Answer;
 
 import esanchez.devel.junit.example.model.Exam;
 import esanchez.devel.junit.example.repository.ExamRepository;
+import esanchez.devel.junit.example.repository.ExamRepositoryImpl;
 import esanchez.devel.junit.example.repository.QuestionsRepository;
+import esanchez.devel.junit.example.repository.QuestionsRepositoryImpl;
 
 /*
  * Extension needed for be able to use mockito with dependency injection
@@ -36,10 +38,16 @@ public class ExamServiceImplTest {
 	/*
 	 * the class that we will mock
 	 */
+	//@Mock
+	//private ExamRepository repository;
+	//@Mock
+	//private QuestionsRepository questionsRepository;
+	
 	@Mock
-	private ExamRepository repository;
+	private ExamRepositoryImpl repository;
+	
 	@Mock
-	private QuestionsRepository questionsRepository;
+	private QuestionsRepositoryImpl questionsRepository;
 	
 	@InjectMocks
 	private ExamServiceImpl service;
@@ -273,5 +281,17 @@ public class ExamServiceImplTest {
 		 * assert that the value captured is the expected one
 		 */
 		assertEquals(5L, captor.getValue());
+	}
+	
+	@Test
+	void testDoCallRealMethod() {
+		when(repository.findAll()).thenReturn(Data.DATA);
+		//when(questionsRepository.findQuestionsByExamId(anyLong())).thenReturn(Data.QUESTIONS);
+		
+		doCallRealMethod().when(questionsRepository).findQuestionsByExamId(anyLong());
+		Exam exam = service.findExamWithQuestions("Maths");
+		
+		assertEquals(5L, exam.getId());
+		assertEquals("Maths", exam.getName());
 	}
 }
