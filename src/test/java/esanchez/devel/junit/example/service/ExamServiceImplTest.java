@@ -25,7 +25,9 @@ import org.mockito.stubbing.Answer;
 
 import esanchez.devel.junit.example.model.Exam;
 import esanchez.devel.junit.example.repository.ExamRepository;
+import esanchez.devel.junit.example.repository.ExamRepositoryImpl;
 import esanchez.devel.junit.example.repository.QuestionsRepository;
+import esanchez.devel.junit.example.repository.QuestionsRepositoryImpl;
 
 /*
  * Extension needed for be able to use mockito with dependency injection
@@ -273,5 +275,24 @@ public class ExamServiceImplTest {
 		 * assert that the value captured is the expected one
 		 */
 		assertEquals(5L, captor.getValue());
+	}
+	
+	@Test
+	void testSpy() {
+		/*
+		 * with spy we will use real methods, so we can't create an spy with an abstract
+		 * class or and interface. this is why we use the ExamRepositoryImpl, because is the
+		 * real implementation
+		 */
+		ExamRepository repository = spy(ExamRepositoryImpl.class);
+		QuestionsRepository questionRepository = spy(QuestionsRepositoryImpl.class);
+		ExamService examService = new ExamServiceImpl(repository, questionRepository);
+		
+		Exam exam = examService.findExamWithQuestions("Maths");
+		
+		assertEquals(5L, exam.getId());
+		assertEquals("Maths", exam.getName());
+		assertEquals(5, exam.getQuestions().size());
+		assertTrue(exam.getQuestions().contains("arithmetics"));
 	}
 }
