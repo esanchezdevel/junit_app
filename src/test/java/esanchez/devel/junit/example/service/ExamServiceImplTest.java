@@ -306,11 +306,24 @@ public class ExamServiceImplTest {
 		QuestionsRepository questionRepository = spy(QuestionsRepositoryImpl.class);
 		ExamService examService = new ExamServiceImpl(repository, questionRepository);
 		
+		/*
+		 * when we use an spy, if we want to avoid that the real method is call and use 
+		 * the mock one, we have to make the when.thenReturn in the other direction
+		 * first doReturn and after that the when
+		 */
+		doReturn(Data.QUESTIONS).when(questionRepository).findQuestionsByExamId(anyLong());
+
 		Exam exam = examService.findExamWithQuestions("Maths");
 		
 		assertEquals(5L, exam.getId());
 		assertEquals("Maths", exam.getName());
 		assertEquals(5, exam.getQuestions().size());
 		assertTrue(exam.getQuestions().contains("arithmetics"));
+		
+		/*
+		 * veriy for check that the methods are invoked
+		 */
+		verify(repository).findAll();
+		verify(questionRepository).findQuestionsByExamId(anyLong());
 	}
 }
