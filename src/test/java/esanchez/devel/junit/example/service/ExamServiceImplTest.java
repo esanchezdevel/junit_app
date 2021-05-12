@@ -17,6 +17,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.ArgumentMatcher;
 import org.mockito.Captor;
+import org.mockito.InOrder;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.invocation.InvocationOnMock;
@@ -325,5 +326,42 @@ public class ExamServiceImplTest {
 		 */
 		verify(repository).findAll();
 		verify(questionRepository).findQuestionsByExamId(anyLong());
+	}
+	
+	@Test
+	void testInvocationsOrder() {
+		
+		when(repository.findAll()).thenReturn(Data.DATA);
+		
+		service.findExamWithQuestions("Maths");
+		
+		service.findExamWithQuestions("Language");
+		
+		/*
+		 * with inOrder we can verify that the methods are invoked in the
+		 * correct order
+		 */
+		InOrder inOrder = inOrder(questionsRepository);
+		inOrder.verify(questionsRepository).findQuestionsByExamId(5L);
+		inOrder.verify(questionsRepository).findQuestionsByExamId(7L);
+		
+	}
+	
+	
+	@Test
+	void testInvocationsOrder2() {
+		
+		when(repository.findAll()).thenReturn(Data.DATA);
+		
+		service.findExamWithQuestions("Maths");
+		
+		service.findExamWithQuestions("Language");
+		
+		InOrder inOrder = inOrder(repository, questionsRepository);
+		inOrder.verify(repository).findAll();
+		inOrder.verify(questionsRepository).findQuestionsByExamId(5L);
+		inOrder.verify(repository).findAll();
+		inOrder.verify(questionsRepository).findQuestionsByExamId(7L);
+		
 	}
 }
