@@ -364,4 +364,42 @@ public class ExamServiceImplTest {
 		inOrder.verify(questionsRepository).findQuestionsByExamId(7L);
 		
 	}
+	
+	@Test
+	void testnumberOfInvocations() {
+		
+		when(repository.findAll()).thenReturn(Data.DATA);
+		
+		service.findExamWithQuestions("Maths");
+
+		/*
+		 * passing times(1) in the second argument of the verify we can validate
+		 * that the method is invoked 1 time
+		 */
+		verify(questionsRepository, times(1)).findQuestionsByExamId(5L);
+		
+		/*
+		 * passing atLeast(1) in the second argument of the verify we can validate
+		 * that the method is invoked at least 1 time
+		 */
+		verify(questionsRepository, atLeast(1)).findQuestionsByExamId(5L);		
+		
+		/*
+		 * passing atLeastOnce() in the second argument of the verify we can validate
+		 * that the method is invoked at least 1 time
+		 */
+		verify(questionsRepository, atLeastOnce()).findQuestionsByExamId(5L);
+		
+		/*
+		 * passing atMost(10) in the second argument of the verify we can validate
+		 * that the method is invoked at most 10 times
+		 */
+		verify(questionsRepository, atMost(10)).findQuestionsByExamId(5L);
+		
+		/*
+		 * passing atMostOnce() in the second argument of the verify we can validate
+		 * that the method is invoked at most 1 time
+		 */
+		verify(questionsRepository, atMostOnce()).findQuestionsByExamId(5L);
+	}
 }
